@@ -19,7 +19,11 @@ export const logout = () => setAuthInfo(null);
 
 
 axios.interceptors.request.use(request => {
-    request.headers["Authorization"] = 'Bearer ' + (getAuthInfo()?.token || "");
+    const authInfo = getAuthInfo();
+    if(autoInfo?.expiresAt && new Date(authInfo.expiresAt)<=new Date()){
+        setAuthInfo(null);
+    }
+    request.headers["Authorization"] = 'Bearer ' + (authInfo?.token || "");
     console.log(request)
     return request;
 },
